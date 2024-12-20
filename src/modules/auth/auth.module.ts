@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 import { UserService } from '../users/user.service';
 import { Env } from 'src/constants/env.constant';
 import { LocalStrategy } from './strategies/local.strategy';
-// import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { LoggerModule } from 'src/logger/logger.module';
@@ -24,6 +24,6 @@ import { LoggerModule } from 'src/logger/logger.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [LocalStrategy, AuthService, UserService],
+  providers: [LocalStrategy, JwtStrategy, AuthService, UserService],
 })
 export class AuthModule {}
