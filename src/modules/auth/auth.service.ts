@@ -1,7 +1,7 @@
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../users/user.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { errorCodesWithMsg } from 'src/constants/app.constant';
+import { errorCodes } from 'src/constants/app.constant';
 import { WinstonLoggerService } from 'src/logger/logger.service';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
@@ -23,12 +23,12 @@ export class AuthService {
         return result;
       }
       throw new HttpException(
-        errorCodesWithMsg.DOCERPERROR019,
+        errorCodes.BACKENDERROR019,
         HttpStatus.BAD_REQUEST,
       );
     } catch (error) {
       this.logger.error(
-        `${errorCodesWithMsg.DOCERPERROR118}:${error.message}`,
+        `${errorCodes.BACKENDERROR118}:${error.message}`,
         error.stack,
       );
       throw error;

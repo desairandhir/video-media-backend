@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
-import { errorCodesWithMsg } from 'src/constants/app.constant';
+import { errorCodes } from 'src/constants/app.constant';
 import { WinstonLoggerService } from 'src/logger/logger.service';
 
 @Injectable()
@@ -33,13 +33,13 @@ export class UserService {
         return result;
       } else {
         throw new HttpException(
-          'Email is already registered with us',
+          `${errorCodes.BACKENDERROR027}`,
           HttpStatus.BAD_REQUEST,
         );
       }
     } catch (error) {
       this.logger.error(
-        `${errorCodesWithMsg.DOCERPERROR012}: ${error.message}`,
+        `${errorCodes.BACKENDERROR012}: ${error.message}`,
         error.stack,
       );
       throw error;
@@ -51,7 +51,7 @@ export class UserService {
       return await this.userRepository.find();
     } catch (error) {
       this.logger.error(
-        `${errorCodesWithMsg.DOCERPERROR013}: ${error.message}`,
+        `${errorCodes.BACKENDERROR013}: ${error.message}`,
         error.stack,
       );
     }
@@ -62,14 +62,14 @@ export class UserService {
       const user = await this.userRepository.findOneBy({ id });
       if (!user) {
         throw new HttpException(
-          errorCodesWithMsg.DOCERPERROR017,
+          errorCodes.BACKENDERROR017,
           HttpStatus.BAD_REQUEST,
         );
       }
       return user;
     } catch (error) {
       this.logger.error(
-        `${errorCodesWithMsg.DOCERPERROR014}: ${error.message}`,
+        `${errorCodes.BACKENDERROR014}: ${error.message}`,
         error.stack,
       );
       throw error;
@@ -81,14 +81,14 @@ export class UserService {
       const user = await this.userRepository.findOneBy({ id });
       if (!user) {
         throw new HttpException(
-          errorCodesWithMsg.DOCERPERROR017,
+          errorCodes.BACKENDERROR017,
           HttpStatus.BAD_REQUEST,
         );
       }
       await this.userRepository.delete(id);
     } catch (error) {
       this.logger.error(
-        `${errorCodesWithMsg.DOCERPERROR015}: ${error.message}`,
+        `${errorCodes.BACKENDERROR015}: ${error.message}`,
         error.stack,
       );
       throw error;
@@ -100,7 +100,7 @@ export class UserService {
       const user = await this.userRepository.findOneBy({ id });
       if (!user) {
         throw new HttpException(
-          errorCodesWithMsg.DOCERPERROR017,
+          errorCodes.BACKENDERROR017,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -111,7 +111,7 @@ export class UserService {
       return await this.userRepository.save(user);
     } catch (error) {
       this.logger.error(
-        `${errorCodesWithMsg.DOCERPERROR016}: ${error.message}`,
+        `${errorCodes.BACKENDERROR016}: ${error.message}`,
         error.stack,
       );
       throw error;
@@ -124,7 +124,7 @@ export class UserService {
       return user || null;
     } catch (error) {
       this.logger.error(
-        `${errorCodesWithMsg.DOCERPERROR069}: ${error.message}`,
+        `${errorCodes.BACKENDERROR069}: ${error.message}`,
         error.stack,
       );
     }

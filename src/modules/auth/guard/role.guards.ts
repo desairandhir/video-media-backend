@@ -5,7 +5,7 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { errorCodesWithMsg } from 'src/constants/app.constant';
+import { errorCodes } from 'src/constants/app.constant';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -22,7 +22,7 @@ export class RoleGuard implements CanActivate {
 
     if (!user || !user.role) {
       throw new HttpException(
-        errorCodesWithMsg.DOCERPERROR021,
+        errorCodes.BACKENDERROR021,
         HttpStatus.BAD_REQUEST,
       );
     }

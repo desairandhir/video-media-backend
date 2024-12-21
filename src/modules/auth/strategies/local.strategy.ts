@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { AuthService } from '../auth.service';
-import { errorCodesWithMsg } from 'src/constants/app.constant';
+import { errorCodes } from 'src/constants/app.constant';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -13,7 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateUser(email, password);
     if (!user) {
       throw new HttpException(
-        errorCodesWithMsg.DOCERPERROR019,
+        errorCodes.BACKENDERROR019,
         HttpStatus.BAD_REQUEST,
       );
     }

@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { errorCodesWithMsg } from 'src/constants/app.constant';
+import { errorCodes } from 'src/constants/app.constant';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -38,7 +38,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       responseMessage = 'Bad Request';
     }
 
-    for (const [code, message] of Object.entries(errorCodesWithMsg)) {
+    for (const [code, message] of Object.entries(errorCodes)) {
       if (error === message) {
         errorCode = code;
         break;
