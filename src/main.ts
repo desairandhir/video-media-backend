@@ -55,7 +55,7 @@ async function bootstrap() {
   );
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Docxel ERP')
+    .setTitle('video-media-backend')
     .setDescription('')
     .setVersion('1.0.0')
     .addBearerAuth()

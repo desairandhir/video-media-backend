@@ -1,98 +1,132 @@
-// import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
-// import * as bcrypt from 'bcrypt';
-// import { User } from './entities/user.entity';
-// import { CreateUserDto } from './dto/create-user.dto';
-// import { logger } from 'src/configs/winston.config';
-// import { errorCodesWithMsg } from 'src/constants/app.constant';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { User } from './entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
-// @Injectable()
-// export class UserService {
-//   constructor(
-//     @InjectRepository(User)
-//     private userRepository: Repository<User>,
-//   ) {}
+import { errorCodes } from 'src/constants/app.constant';
+import { WinstonLoggerService } from 'src/logger/logger.service';
 
-//   async create(createUserDto: CreateUserDto) {
-//     const { password, ...otherUserData } = createUserDto;
-//     try {
-//       const hashedPassword = await bcrypt.hash(password, 10);
-//       const user = await this.userRepository.create({
-//         ...otherUserData,
-//         password: hashedPassword,
-//       });
-//       await this.userRepository.save(user);
-//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//       const { password: _, ...result } = user;
-//       return result;
-//     } catch (error) {
-//       logger.error(`${errorCodesWithMsg.DOCERPERROR012}: ${error.message}`);
-//       throw error;
-//     }
-//   }
+@Injectable()
+export class UserService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    private readonly logger: WinstonLoggerService,
+  ) {}
 
-//   async findAll() {
-//     try {
-//       return await this.userRepository.find();
-//     } catch (error) {
-//       logger.error(`${errorCodesWithMsg.DOCERPERROR013}: ${error.message}`);
-//     }
-//   }
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const checkEmail = await this.findOneWithEmail(createUserDto.email);
+      if (!checkEmail) {
+        const { password, ...otherUserData } = createUserDto;
 
-//   async findOne(id: string) {
-//     try {
-//       const user = await this.userRepository.findOneBy({ id });
-//       if (!user) {
-//         throw new HttpException(
-//           errorCodesWithMsg.DOCERPERROR017,
-//           HttpStatus.BAD_REQUEST,
-//         );
-//       }
-//       return user;
-//     } catch (error) {
-//       logger.error(`${errorCodesWithMsg.DOCERPERROR014}: ${error.message}`);
-//       throw error;
-//     }
-//   }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await this.userRepository.create({
+          ...otherUserData,
+          password: hashedPassword,
+        });
+        await this.userRepository.save(user);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password: _, ...result } = user;
+        return result;
+      } else {
+        throw new HttpException(
+          `${errorCodes.BACKENDERROR027}`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `${errorCodes.BACKENDERROR012}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
+  }
 
-//   async remove(id: string) {
-//     try {
-//       const user = await this.userRepository.findOneBy({ id });
-//       if (!user) {
-//         throw new HttpException(
-//           errorCodesWithMsg.DOCERPERROR017,
-//           HttpStatus.BAD_REQUEST,
-//         );
-//       }
-//       await this.userRepository.delete(id);
-//     } catch (error) {
-//       logger.error(`${errorCodesWithMsg.DOCERPERROR015}: ${error.message}`);
-//       throw error;
-//     }
-//   }
+  async findAll() {
+    try {
+      return await this.userRepository.find();
+    } catch (error) {
+      this.logger.error(
+        `${errorCodes.BACKENDERROR013}: ${error.message}`,
+        error.stack,
+      );
+    }
+  }
 
-//   async update(id: string, newData: Partial<User>) {
-//     try {
-//       const user = await this.userRepository.findOneBy({ id });
-//       if (!user) {
-//         throw new HttpException(
-//           errorCodesWithMsg.DOCERPERROR017,
-//           HttpStatus.BAD_REQUEST,
-//         );
-//       }
-//       if (newData.password) {
-//         newData.password = await bcrypt.hash(newData.password, 10);
-//       }
-//       Object.assign(user, newData);
-//       return await this.userRepository.save(user);
-//     } catch (error) {
-//       logger.error(`${errorCodesWithMsg.DOCERPERROR016}: ${error.message}`);
-//       throw error;
-//     }
-//   }
+  async findOne(id: string) {
+    try {
+      const user = await this.userRepository.findOneBy({ id });
+      if (!user) {
+        throw new HttpException(
+          errorCodes.BACKENDERROR017,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      return user;
+    } catch (error) {
+      this.logger.error(
+        `${errorCodes.BACKENDERROR014}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
+  }
 
-//   async findOneWithUserName(username: string) {
-//     return await this.userRepository.findOne({ where: { username: username } });
-//   }
-// }
+  async remove(id: string) {
+    try {
+      const user = await this.userRepository.findOneBy({ id });
+      if (!user) {
+        throw new HttpException(
+          errorCodes.BACKENDERROR017,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      await this.userRepository.delete(id);
+    } catch (error) {
+      this.logger.error(
+        `${errorCodes.BACKENDERROR015}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
+  }
+
+  async update(id: string, newData: Partial<User>) {
+    try {
+      const user = await this.userRepository.findOneBy({ id });
+      if (!user) {
+        throw new HttpException(
+          errorCodes.BACKENDERROR017,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      if (newData.password) {
+        newData.password = await bcrypt.hash(newData.password, 10);
+      }
+      Object.assign(user, newData);
+      return await this.userRepository.save(user);
+    } catch (error) {
+      this.logger.error(
+        `${errorCodes.BACKENDERROR016}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
+  }
+
+  async findOneWithEmail(email: string) {
+    try {
+      const user = await this.userRepository.findOne({ where: { email } });
+      return user || null;
+    } catch (error) {
+      this.logger.error(
+        `${errorCodes.BACKENDERROR069}: ${error.message}`,
+        error.stack,
+      );
+    }
+  }
+}
