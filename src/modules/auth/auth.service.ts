@@ -40,7 +40,7 @@ export class AuthService {
     const user = await this.userService.findOneWithEmail(loginDto.email);
     const payload = {
       email: user.email,
-      role: user.role,
+      // role: user.role,
       sub: {
         name: user.username,
       },

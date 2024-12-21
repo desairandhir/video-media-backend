@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { errorCodes } from 'src/constants/app.constant';
 
 export class CreateUserDto {
@@ -20,11 +20,6 @@ export class CreateUserDto {
 
   @ApiProperty({ description: 'The contact number of the user' })
   @IsNotEmpty({ message: errorCodes.BACKENDERROR022 })
-  @IsNumber({}, { message: errorCodes.BACKENDERROR043 })
-  contact: number;
-
-  @ApiProperty({ description: 'The role of the user', maxLength: 50 })
-  @IsString({ message: errorCodes.BACKENDERROR026 })
-  @Length(1, 50, { message: errorCodes.BACKENDERROR044 })
-  role: string;
+  @IsString({ message: errorCodes.BACKENDERROR043 })
+  contact: string;
 }

@@ -15,9 +15,6 @@ export class User extends Base {
   @Column({ type: 'varchar', length: 100 })
   email: string;
 
-  @Column({ type: 'bigint' })
-  contact: number;
-
-  @Column({ type: 'varchar', length: 50 })
-  role: string;
+  @Column({ type: 'varchar', length: 20 })
+  contact: string;
 }
