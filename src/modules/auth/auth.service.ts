@@ -1,9 +1,9 @@
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../users/user.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { UserService } from '../users/user.service';
 import { errorCodes } from 'src/constants/app.constant';
 import { WinstonLoggerService } from 'src/logger/logger.service';
-import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
@@ -28,14 +28,15 @@ export class AuthService {
       );
     } catch (error) {
       this.logger.error(
-        `${errorCodes.BACKENDERROR118}:${error.message}`,
+        `${errorCodes.BACKENDERROR118}: ${error.message}`,
         error.stack,
       );
       throw error;
     }
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto, req: any) {
+    console.log(req);
     const user = await this.userService.findOneWithEmail(loginDto.email);
     const payload = {
       email: user.email,
@@ -44,9 +45,10 @@ export class AuthService {
         name: user.username,
       },
     };
+    const accessToken = this.jwtService.sign(payload);
     return {
       ...user,
-      accessToken: this.jwtService.sign(payload),
+      accessToken,
     };
   }
 }

@@ -24,9 +24,9 @@ export const Env = {
     PASSWORD: getEnvVariableValue('SWAGGER_PASSWORD'),
   },
   JWT: {
-    AUTH_TOKEN: process.env.JWT_AUTH_TOKEN || 'fallback_secret',
-    EXPIRES_IN: process.env.JWT_EXPIRES_IN || '3600',
+    AUTH_TOKEN: getEnvVariableValue('JWT_AUTH_TOKEN'),
     REFRESH_TOKEN: getEnvVariableValue('JWT_REFRESH_TOKEN'),
+    EXPIRES_IN: getEnvVariableValue('EXPIRES_IN'),
   },
   APP: {
     PORT: getEnvVariableValue('PORT'),

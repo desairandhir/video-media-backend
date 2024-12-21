@@ -26,6 +26,12 @@ export class RoleGuard implements CanActivate {
         HttpStatus.BAD_REQUEST,
       );
     }
+    if (!this.roles.includes(user.role)) {
+      throw new HttpException(
+        errorCodes.BACKENDERROR020,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return true;
   }
 }
