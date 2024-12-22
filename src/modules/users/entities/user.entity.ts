@@ -17,4 +17,7 @@ export class User extends Base {
 
   @Column({ type: 'varchar', length: 20 })
   contact: string;
+
+  @Column({ type: 'varchar', length: 20 })
+  role: string;
 }

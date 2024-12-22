@@ -22,4 +22,9 @@ export class CreateUserDto {
   @IsNotEmpty({ message: errorCodes.BACKENDERROR022 })
   @IsString({ message: errorCodes.BACKENDERROR043 })
   contact: string;
+
+  @ApiProperty({ description: 'The role of the user' })
+  @IsNotEmpty({ message: errorCodes.BACKENDERROR028 })
+  @IsString({ message: errorCodes.BACKENDERROR026 })
+  role: string;
 }
