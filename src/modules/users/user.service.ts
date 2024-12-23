@@ -124,7 +124,7 @@ export class UserService {
       return user || null;
     } catch (error) {
       this.logger.error(
-        `${errorCodes.BACKENDERROR069}: ${error.message}`,
+        `${errorCodes.BACKENDERROR011}: ${error.message}`,
         error.stack,
       );
     }
