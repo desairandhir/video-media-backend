@@ -17,6 +17,12 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     try {
       const user = await this.userService.findOneWithEmail(email);
+      if (!user) {
+        throw new HttpException(
+          errorCodes.BACKENDERROR017,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       if (user && (await bcrypt.compare(password, user.password))) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...result } = user;
@@ -28,7 +34,7 @@ export class AuthService {
       );
     } catch (error) {
       this.logger.error(
-        `${errorCodes.BACKENDERROR118}: ${error.message}`,
+        `${errorCodes.BACKENDERROR029}: ${error.message}`,
         error.stack,
       );
       throw error;
@@ -36,19 +42,34 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto, req: any) {
-    console.log(req);
-    const user = await this.userService.findOneWithEmail(loginDto.email);
-    const payload = {
-      email: user.email,
-      // role: user.role,
-      sub: {
-        name: user.username,
-      },
-    };
-    const accessToken = this.jwtService.sign(payload);
-    return {
-      ...user,
-      accessToken,
-    };
+    try {
+      console.log(req);
+      const { email, password } = loginDto;
+      const user = await this.validateUser(email, password);
+      if (!user) {
+        throw new HttpException(
+          errorCodes.BACKENDERROR017,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const payload = {
+        email: user.email,
+        role: user.role,
+        sub: {
+          name: user.username,
+        },
+      };
+      const accessToken = this.jwtService.sign(payload);
+      return {
+        ...user,
+        accessToken,
+      };
+    } catch (error) {
+      this.logger.error(
+        `${errorCodes.BACKENDERROR030}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
   }
 }
