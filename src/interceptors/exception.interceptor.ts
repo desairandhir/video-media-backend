@@ -30,9 +30,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       typeof exception.getResponse() === 'string'
         ? exception.getResponse()
         : exception.getResponse() &&
-          typeof exception.getResponse()['message'] === 'object'
-        ? exception.getResponse()['message'].join(', ')
-        : exception.getResponse()['message'];
+            typeof exception.getResponse()['message'] === 'object'
+          ? exception.getResponse()['message'].join(', ')
+          : exception.getResponse()['message'];
 
     if (status === HttpStatus.BAD_REQUEST) {
       responseMessage = 'Bad Request';
@@ -44,7 +44,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         break;
       }
     }
-    
+
     if (err.includes('ER_DUP_ENTRY')) {
       response.status(status).json({
         isSuccess: false,

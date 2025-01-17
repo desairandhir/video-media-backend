@@ -1,7 +1,5 @@
 import { WinstonModule } from 'nest-winston';
-// import { Env } from 'src/constants/env.constant';
 import { transports, format } from 'winston';
-// import * as WinstonCloudWatch from 'winston-cloudwatch';
 
 const levels = {
   debug: 0,
@@ -26,18 +24,5 @@ export const logger = WinstonModule.createLogger({
         }),
       ),
     }),
-    // new WinstonCloudWatch({
-    //   logGroupName: Env.AWS.CLOUDWATCH.LOG_GROUP_NAME,
-    //   logStreamName: Env.AWS.CLOUDWATCH.LOG_STREAM_NAME,
-    //   awsRegion: Env.AWS.REGION,
-    //   jsonMessage: true,
-    //   awsOptions: {
-    //     credentials: {
-    //       accessKeyId: Env.AWS.ACCESS_KEY_ID,
-    //       secretAccessKey: Env.AWS.SECRET_KEY,
-    //     },
-    //   },
-    //   level: 'warn',
-    // }),
   ],
 });
